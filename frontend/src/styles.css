@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+/* Design tokens — override these to re-skin the whole app. */
+@theme {
+  --color-brand-50: oklch(0.97 0.014 254);
+  --color-brand-600: oklch(0.55 0.18 258);
+  --color-brand-700: oklch(0.48 0.17 258);
+}
+
+/*
+ * Tailwind v4 requires custom classes to be declared with @utility before they
+ * can be reused with @apply. Declaring them here (instead of three copies of the
+ * same base styles) is what keeps the markup short.
+ */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium
+         transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600
+         focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+}
+
+@utility btn-ghost {
+  @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50;
+}
+
+@utility field {
+  @apply mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm
+         text-slate-900 shadow-sm placeholder:text-slate-400
+         focus:border-brand-600 focus:outline-none focus:ring-1 focus:ring-brand-600;
+}
+
+@utility label {
+  @apply block text-sm font-medium text-slate-700;
+}
+
+@utility card {
+  @apply rounded-xl border border-slate-200 bg-white p-6 shadow-sm;
+}

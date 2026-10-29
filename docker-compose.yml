@@ -1,0 +1,47 @@
+# One command to run the whole stack: `docker compose up`
+# Postgres + API + (optional) pgAdmin. The Angular dev server runs on the host.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: the5fixes-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-the5fixes}
+      POSTGRES_USER: ${DB_USERNAME:-the5fixes}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-the5fixes}
+    ports:
+      - "5434:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-the5fixes} -d ${DB_NAME:-the5fixes}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+    container_name: the5fixes-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-the5fixes}
+      DB_USERNAME: ${DB_USERNAME:-the5fixes}
+      DB_PASSWORD: ${DB_PASSWORD:-the5fixes}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required - see .env.example}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+      BOOTSTRAP_ADMIN_NAME: ${BOOTSTRAP_ADMIN_NAME:-Administrator}
+    ports:
+      - "8081:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+volumes:
+  db-data:

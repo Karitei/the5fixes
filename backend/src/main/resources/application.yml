@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: the5fixes-api
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/the5fixes}
+    username: ${DB_USERNAME:the5fixes}
+    password: ${DB_PASSWORD:the5fixes}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+
+  jpa:
+    open-in-view: false          # never lazy-load in the view layer; forces explicit fetching
+    hibernate:
+      ddl-auto: validate         # Flyway owns the schema, Hibernate only verifies it matches
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          batch_size: 30
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+  threads:
+    virtual:
+      enabled: true              # Java 21+ feature; harmless on 17 (ignored)
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never       # never leak exception messages to clients
+    include-stacktrace: never
+  compression:
+    enabled: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-env-this-must-be-at-least-32-bytes-long!!}
+    issuer: the5fixes-api
+    access-token-ttl: PT15M
+    refresh-token-ttl: P7D
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+  bootstrap:
+    admin-email: ${BOOTSTRAP_ADMIN_EMAIL:}
+    admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}
+    admin-full-name: ${BOOTSTRAP_ADMIN_NAME:Administrator}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: the 5 fixes API
+    version: 1.0.0
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+
+logging:
+  level:
+    com.the5fixes: INFO
+    org.hibernate.SQL: WARN
+
+the5fixes:
+  lighthouse:
+    script: ${LIGHTHOUSE_SCRIPT:C:/Users/ASUS/AppData/Roaming/npm/node_modules/lighthouse/cli/index.js}

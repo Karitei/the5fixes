@@ -1,0 +1,33 @@
+# Tests run on H2 in-memory: no Docker required in CI, and fast.
+# Flyway is disabled here and Hibernate creates the schema, because the production
+# migrations are Postgres-specific. Integration tests against real Postgres
+# (Testcontainers) belong in a separate `it` profile.
+spring:
+  datasource:
+    url: jdbc:h2:mem:the5fixes;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+
+app:
+  jwt:
+    secret: test-secret-test-secret-test-secret-32bytes-minimum
+    issuer: starter-kit-api-test
+    access-token-ttl: PT15M
+    refresh-token-ttl: P7D
+  cors:
+    allowed-origins: http://localhost:4200
+  bootstrap:
+    admin-email: ""
+    admin-password: ""
+    admin-full-name: Test Admin
+
+logging:
+  level:
+    org.springframework: WARN
