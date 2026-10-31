@@ -38,9 +38,6 @@ public class AuditResult extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private long pageSizeBytes;
 
-    @Column(nullable = false,updatable = false)
-    private String reportPath;
-
     public AuditResult(int performanceScore, int accessibilityScore, int bestPracticesScore,
                        int seoScore, Double loadTimeSeconds, long pageSizeBytes) {
         this.performanceScore = performanceScore;
@@ -88,9 +85,7 @@ public class AuditResult extends BaseEntity {
         return pageSizeBytes;
     }
 
-    public String getReportPath() {
-        return reportPath;
-    }
+
 
     public void setPerformanceScore(int performanceScore) {
         this.performanceScore = performanceScore;

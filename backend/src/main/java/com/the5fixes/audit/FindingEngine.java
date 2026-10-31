@@ -41,7 +41,12 @@ public class FindingEngine {
                                                 .orElse(""),
                                         Severity.CRITICAL,
                                         audit.lcpSavingsMs(),
-                                        audit.fcpSavingsMs()
+                                        audit.fcpSavingsMs(),
+                                        Arrays.stream(AuditCheckMetadata.values())
+                                                .filter(metadata -> metadata.getId().equals(audit.id()))
+                                                .map(AuditCheckMetadata::getEffort)
+                                                .findFirst()
+                                                .orElse( 0)
                                 ));
                     }
 
@@ -55,7 +60,12 @@ public class FindingEngine {
                                                 .orElse(""),
                                         Severity.HIGH,
                                         audit.lcpSavingsMs(),
-                                        audit.fcpSavingsMs()
+                                        audit.fcpSavingsMs(),
+                                        Arrays.stream(AuditCheckMetadata.values())
+                                                .filter(metadata -> metadata.getId().equals(audit.id()))
+                                                .map(AuditCheckMetadata::getEffort)
+                                                .findFirst()
+                                                .orElse( 0)
                                 ));
                     }
 
@@ -69,7 +79,12 @@ public class FindingEngine {
                                                 .orElse(""),
                                         Severity.MEDIUM,
                                         audit.lcpSavingsMs(),
-                                        audit.fcpSavingsMs()
+                                        audit.fcpSavingsMs(),
+                                        Arrays.stream(AuditCheckMetadata.values())
+                                                .filter(metadata -> metadata.getId().equals(audit.id()))
+                                                .map(AuditCheckMetadata::getEffort)
+                                                .findFirst()
+                                                .orElse( 0)
                                 ));
                     }
 
@@ -83,8 +98,14 @@ public class FindingEngine {
                                                 .orElse(""),
                                         Severity.LOW,
                                         audit.lcpSavingsMs(),
-                                        audit.fcpSavingsMs()
-                                ));
+                                        audit.fcpSavingsMs(),
+                                        Arrays.stream(AuditCheckMetadata.values())
+                                                .filter(metadata -> metadata.getId().equals(audit.id()))
+                                                .map(AuditCheckMetadata::getEffort)
+                                                .findFirst()
+                                                .orElse( 0)
+                                )
+                        );
                     }
 
 
@@ -99,7 +120,12 @@ public class FindingEngine {
                                                 .orElse(""),
                                         Severity.LOW,
                                         audit.lcpSavingsMs(),
-                                        audit.fcpSavingsMs()
+                                        audit.fcpSavingsMs(),
+                                        Arrays.stream(AuditCheckMetadata.values())
+                                                .filter(metadata -> metadata.getId().equals(audit.id()))
+                                                .map(AuditCheckMetadata::getEffort)
+                                                .findFirst()
+                                                .orElse( 0)
                                 ));
 
                 }
@@ -109,6 +135,7 @@ public class FindingEngine {
                     Comparator.comparingInt(Finding::lcpSavingsMs).reversed()
             );
 
+           //Limit of 5 audits
             if (Auditresults.size() > 5) {
                 Auditresults = new ArrayList<>(Auditresults.subList(0, 5));
             }

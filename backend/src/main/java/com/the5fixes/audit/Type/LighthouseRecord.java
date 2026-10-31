@@ -2,6 +2,8 @@ package com.the5fixes.audit.Type;
 
 import com.the5fixes.audit.Entity.AuditResult;
 
+import java.util.List;
+
 public record LighthouseRecord()  {
     public static int performance;
     public static int accessibility;
@@ -9,6 +11,7 @@ public record LighthouseRecord()  {
     public static int seo;
     public static double loadTimeSeconds;
     public static long pageSizeBytes ;
+    public static List<RawAudit> rawAudits;
 
     public static void setPerformance(int performance) {
         LighthouseRecord.performance = performance;
@@ -56,5 +59,13 @@ public record LighthouseRecord()  {
 
     public static long getPageSizeBytes() {
         return pageSizeBytes;
+    }
+
+    public static List<RawAudit> getRawAudits() {
+        return rawAudits;
+    }
+
+    public static void setRawAudits(List<RawAudit> rawAudits) {
+        LighthouseRecord.rawAudits = rawAudits;
     }
 }

@@ -16,10 +16,6 @@ public class AuditService {
 
     private final AuditLogRepository repository;
 
-    /**
-     * REQUIRES_NEW so an audit record survives even if the surrounding business
-     * transaction rolls back — a failed login attempt is exactly what you want recorded.
-     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void record(AuditEventType type, String actor, String targetType, String targetId,
                        String details, String ipAddress) {

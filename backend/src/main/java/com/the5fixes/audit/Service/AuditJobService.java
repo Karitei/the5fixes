@@ -50,6 +50,8 @@ public class AuditJobService {
                 .orElseThrow(()->new NotFoundException("Audit not found" + jobId));
 
         if(job.getStatus() == JobStatus.DONE){
+
+            //get AuditScores
             AuditResult result = resultRepository.findByJobId(jobId)
                     .orElseThrow(()->new NotFoundException("Audit not found" + jobId));
 
@@ -60,6 +62,8 @@ public class AuditJobService {
                     result.getSeoScore(),
                     result.getLoadTimeSeconds(),
                     result.getPageSizeBytes());
+
+            
 
             return new AuditStatusResponse(
                     jobId,

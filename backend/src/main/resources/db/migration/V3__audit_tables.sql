@@ -28,7 +28,6 @@ CREATE TABLE audit_result  (
     seo_score               INTEGER,
     load_time_seconds       DOUBLE PRECISION,
     page_size_bytes         BIGINT,
-    report_path             VARCHAR(500),
     created_at     TIMESTAMPTZ  NOT NULL,
     updated_at     TIMESTAMPTZ  NOT NULL,
     created_by      VARCHAR(255),

@@ -4,6 +4,7 @@ package com.the5fixes.audit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.the5fixes.audit.Type.LighthouseRecord;
+import com.the5fixes.audit.Type.RawAudit;
 import com.the5fixes.common.AuditFailedException;
 
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -19,12 +21,14 @@ public class LighthouseRunner {
     private final String scriptPath;
     private final int timeoutSeconds;
     private final ObjectMapper mapper;
+    private final ReportParser reportParser;
 
     public LighthouseRunner(@Value("${the5fixes.lighthouse.script}") String scriptPath,
-                            @Value("${the5fixes.lighthouse.timeout-seconds:180}") int timeoutSeconds, ObjectMapper mapper) {
+                            @Value("${the5fixes.lighthouse.timeout-seconds:180}") int timeoutSeconds, ObjectMapper mapper, ReportParser reportParser) {
         this.scriptPath = scriptPath;
         this.timeoutSeconds = timeoutSeconds;
         this.mapper = mapper;
+        this.reportParser = reportParser;
     }
 
     public LighthouseRecord run(String url) {
@@ -55,7 +59,11 @@ public class LighthouseRunner {
                 String details = Files.readString(log);
                 throw new AuditFailedException("Lighthouse a échoué : " + details);
             }
-            return parse(output);
+
+            //Extract auditFindings
+            List<RawAudit> rawAudits = parseFindings(output);
+
+            return parse(output, rawAudits);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -70,8 +78,7 @@ public class LighthouseRunner {
 
     }
 
-
-    private LighthouseRecord parse(Path output) throws IOException  {
+    private LighthouseRecord parse(Path output, List<RawAudit> rawAudits) throws IOException  {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -119,10 +126,19 @@ public class LighthouseRunner {
         result.setAccessibility((int) accessibility);
         result.setBestPractices((int) bestPractice);
         result.setSeo((int) seo);
-        result.setLoadTimeSeconds(Math.round(loadTimeSeconds));
+        result.setLoadTimeSeconds(Math.round(loadTimeSeconds * 100.0) / 100.0);
         result.setPageSizeBytes((long) pageSizeBytes);
+        result.setRawAudits(rawAudits);
 
         return result;
+    }
+
+    private List<RawAudit> parseFindings(Path output) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode root = mapper.readTree(output.toFile());
+
+        return reportParser.extractAudits(root);
     }
 
     private void deleteQuietly(Path path) {
@@ -133,6 +149,8 @@ public class LighthouseRunner {
             // Not able to delete file
         }
     }
+
+
 
 
 }

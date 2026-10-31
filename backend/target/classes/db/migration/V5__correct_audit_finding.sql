@@ -1,0 +1,1 @@
+ALTER TABLE audit_finding RENAME COLUMN effort_hours TO effort_minutes;
