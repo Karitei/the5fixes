@@ -23,14 +23,14 @@ public class ReportParser {
             JsonNode audit = fields.next().getValue();
             JsonNode savings = audit.path("metricSavings");
 
-            if (savings.isMissingNode()) {
-                continue;
-            }
+
 
             audits.add(new RawAudit(
                     audit.path("id").asText(),
                     savings.path("LCP").asInt(),
-                    savings.path("FCP").asInt()
+                    savings.path("FCP").asInt(),
+                    audit.path("score").asDouble(),
+                    audit.path("scoreDisplayMode").asText()
             ));
         }
 

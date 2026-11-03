@@ -28,9 +28,20 @@ public class ReportParserTest {
 
         List<RawAudit> audits = parser.extractAudits(root);
 
-        assertEquals(9, audits.size());
-        assertTrue(audits.contains(new RawAudit("document-latency-insight", 1150, 1150)));
-        assertTrue(audits.contains(new RawAudit("font-display-insight", 0, 900)));
+        assertEquals(26, audits.size());
+        assertTrue(audits.contains(new RawAudit(
+                "document-latency-insight",
+                1150,
+                1150,
+                0.0,
+                "metricSavings")));
+        assertTrue(audits.contains(new RawAudit(
+                "font-display-insight",
+                0,
+                900,
+                0.0,
+                "metricSavings"
+        )));
     }
 
     /** Sans fichier : vérifie que les audits sans gain sont ignorés. */
@@ -46,7 +57,12 @@ public class ReportParserTest {
         List<RawAudit> audits = parser.extractAudits(root);
 
         assertEquals(1, audits.size());
-        assertEquals(new RawAudit("cache-insight", 1250, 0), audits.get(0));
+        assertEquals(new RawAudit("cache-insight",
+                1250,
+                0,
+                0.0,
+                ""
+        ), audits.get(0));
     }
 
 }

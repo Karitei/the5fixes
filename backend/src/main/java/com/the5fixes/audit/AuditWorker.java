@@ -65,7 +65,7 @@ public class AuditWorker {
             resultRepository.save(result);
 
             //save AuditFinding
-            List<Finding> findings =  FindingEngine.Properties(record.getRawAudits());
+            List<Finding> findings =  FindingEngine.prioritise(record.getRawAudits());
 
             List<AuditFinding> entities = new ArrayList<>();
 

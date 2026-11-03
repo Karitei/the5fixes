@@ -1,19 +1,22 @@
 package com.the5fixes.audit.Service;
 
 import com.the5fixes.audit.AuditWorker;
+import com.the5fixes.audit.Entity.AuditFinding;
 import com.the5fixes.audit.Entity.AuditJob;
 import com.the5fixes.audit.Entity.AuditResult;
+import com.the5fixes.audit.Repository.AuditFindingRepository;
 import com.the5fixes.audit.Repository.AuditJobRepository;
 import com.the5fixes.audit.Repository.AuditResultRepository;
 import com.the5fixes.audit.Type.JobStatus;
 import com.the5fixes.audit.UrlNormalizer;
 import com.the5fixes.audit.dto.AuditScores;
 import com.the5fixes.audit.dto.AuditStatusResponse;
+import com.the5fixes.audit.dto.FindingResponse;
 import com.the5fixes.common.NotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,11 +25,14 @@ public class AuditJobService {
     private final AuditWorker worker;
     private final AuditResultRepository resultRepository;
 
+    private final AuditFindingRepository findingRepository;
 
-    public AuditJobService(AuditJobRepository repository, AuditWorker worker, AuditResultRepository resultRepository) {
+
+    public AuditJobService(AuditJobRepository repository, AuditWorker worker, AuditResultRepository resultRepository, AuditFindingRepository findingRepository) {
         this.repository = repository;
         this.worker = worker;
         this.resultRepository = resultRepository;
+        this.findingRepository = findingRepository;
     }
 
 
@@ -63,12 +69,24 @@ public class AuditJobService {
                     result.getLoadTimeSeconds(),
                     result.getPageSizeBytes());
 
-            
+            //get AuditFindings
+            List<AuditFinding> findings = findingRepository.findByJobIdOrderByDisplayOrder(jobId);
+
+            List<FindingResponse> responses = findings.stream()
+                    .map(f -> new FindingResponse(
+                            f.getAuditId(),
+                            f.getSeverity(),
+                            f.getTitle(),
+                            f.getLcpSavingsMs(),
+                            f.getFcpSavingsMs(),
+                            f.getEffortMinutes()))
+                    .toList();
 
             return new AuditStatusResponse(
                     jobId,
                     job.getStatus(),
                     scores,
+                    responses,
                     null
             );
 
@@ -77,12 +95,14 @@ public class AuditJobService {
                     jobId,
                     job.getStatus(),
                     null,
+                    null,
                     null
             );
         }else {
             return new AuditStatusResponse(
                     jobId,
                     job.getStatus(),
+                    null,
                     null,
                     job.getErrorMessage());
         }
