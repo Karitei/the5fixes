@@ -8,8 +8,8 @@ import {
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { routes } from './app.routes';
-import { authInterceptor } from './core/auth.interceptor';
-import { AuthService } from './core/auth.service';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthService } from './core/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

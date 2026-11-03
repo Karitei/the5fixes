@@ -2,60 +2,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../core/auth.service';
-import { NotificationService } from '../core/notification.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
-  template: `
-    <div class="mx-auto mt-16 max-w-md">
-      <div class="card">
-        <h1 class="text-xl font-semibold">Create your account</h1>
-
-        <form class="mt-6 space-y-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div>
-            <label class="label" for="fullName">Full name</label>
-            <input id="fullName" class="field" formControlName="fullName" autocomplete="name" />
-          </div>
-
-          <div>
-            <label class="label" for="email">Email</label>
-            <input id="email" type="email" class="field" formControlName="email" autocomplete="email" />
-          </div>
-
-          <div>
-            <label class="label" for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              class="field"
-              formControlName="password"
-              autocomplete="new-password"
-            />
-            <p class="mt-1 text-xs text-slate-500">At least 8 characters.</p>
-          </div>
-
-          @if (fieldErrors().length) {
-            <ul class="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-              @for (msg of fieldErrors(); track msg) {
-                <li>{{ msg }}</li>
-              }
-            </ul>
-          }
-
-          <button type="submit" class="btn-primary w-full" [disabled]="loading()">
-            {{ loading() ? 'Creating…' : 'Create account' }}
-          </button>
-        </form>
-
-        <p class="mt-4 text-center text-sm text-slate-600">
-          Already registered?
-          <a routerLink="/login" class="font-medium text-brand-600 hover:underline">Sign in</a>
-        </p>
-      </div>
-    </div>
-  `,
+  templateUrl : 'register.html' ,
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);

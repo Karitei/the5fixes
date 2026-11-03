@@ -1,12 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AuthService } from '../core/auth.service';
-
-@Component({
-  selector: 'app-dashboard',
-  imports: [DatePipe],
-  template: `
-    <div class="space-y-6">
+<div class="space-y-6">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight">
           Welcome, {{ auth.currentUser()?.fullName }}
@@ -45,8 +37,3 @@ import { AuthService } from '../core/auth.service';
         </ul>
       </div>
     </div>
-  `,
-})
-export class DashboardComponent {
-  readonly auth = inject(AuthService);
-}

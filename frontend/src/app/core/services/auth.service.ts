@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, shareReplay, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { AuthResponse, User } from './models';
+import { environment } from '../../../environments/environment';
+import { AuthResponse, User } from './../models/models';
 
 const ACCESS_TOKEN_KEY = 'sk.accessToken';
 const REFRESH_TOKEN_KEY = 'sk.refreshToken';

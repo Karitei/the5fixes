@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
-import { AuthService } from './auth.service';
-import { Role } from './models';
+import { AuthService } from '../services/auth.service';
+import { Role } from '../models/models';
 
 /**
  * Client-side role guard. This is UX only — the API enforces authorisation
