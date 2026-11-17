@@ -1,0 +1,30 @@
+<!-- Toasts -->
+<div class="pointer-events-none fixed bottom-4 right-4 z-50 flex w-80 flex-col gap-2">
+
+  @for (toast of notificationService.toasts(); track toast.id) {
+    <div
+      class="pointer-events-auto rounded-lg border px-4 py-3 text-sm shadow-lg"
+      [class]="
+        toast.kind === 'success'
+          ? 'border-green-200 bg-green-50 text-green-900'
+          : toast.kind === 'error'
+            ? 'border-red-200 bg-red-50 text-red-900'
+            : 'border-slate-200 bg-white text-slate-900'
+      "
+      role="status"
+    >
+      <div class="flex items-start justify-between gap-3">
+        <span>{{ toast.message }}</span>
+
+        <button
+          type="button"
+          class="text-xs opacity-60 hover:opacity-100"
+          (click)="notificationService.dismiss(toast.id)"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

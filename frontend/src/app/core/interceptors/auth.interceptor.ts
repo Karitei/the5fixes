@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * Attaches the bearer token to every API request, and transparently retries once

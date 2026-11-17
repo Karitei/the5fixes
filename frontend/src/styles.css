@@ -8,10 +8,9 @@
 }
 
 /*
- * Tailwind v4 requires custom classes to be declared with @utility before they
- * can be reused with @apply. Declaring them here (instead of three copies of the
- * same base styles) is what keeps the markup short.
+ *  custom classes
  */
+
 @utility btn {
   @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium
          transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600
@@ -39,3 +38,6 @@
 @utility card {
   @apply rounded-xl border border-slate-200 bg-white p-6 shadow-sm;
 }
+
+html
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
